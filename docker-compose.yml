@@ -1,21 +1,17 @@
+version: '3.8'
 services: 
   db: 
     image: postgres:15-alpine #Imagem do PostgreSQL
     container_name: postgres_industrial # Nome que vai aparecer no Docker
     restart: always
-    
     environment: #Aqui será definido as credencuaus idênticas ao application.properties
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: industrial_db
-
-    ports: 
-      -"5432:5432"
-    #Mapeia a porta 5432 do computador (esquerda) para a porta 5432 do container (direita)
-
-    volumes: 
+    ports: #Mapeia a porta 5432 do computador (esquerda) para a porta 5432 do container (direita)
+      - "5432:5432"
+    volumes: # Salva os dados no disco rígido para não perder o container
       - postgres_data:/var/lib/postgresql/postgres_data
-    # Salva os dados no disco rígido para não perder o container
 
 volumes:
-  postgres_data
+  postgres_data:

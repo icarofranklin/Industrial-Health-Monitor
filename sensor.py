@@ -2,11 +2,14 @@ import random
 import time
 import json
 import sys # Import necessário para manipulação de sistema
+import requests 
 from datetime import datetime
 
 # Configuração da simulação
 ID_MAQUINA = "MAQUINA-GENERICA"
 INTERVALO_LEITURA = 2  # segundos
+
+URL_BACKEND = "http://backend:8080/api/telemetria"
 
 # SE O UTILIZADOR PASSAR UM NOME AO RODAR O SCRIPT, USAMOS ESSE NOME
 # EX: python sensor.py TORNO-01
