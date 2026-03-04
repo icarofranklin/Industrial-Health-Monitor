@@ -2,7 +2,7 @@ import random
 import time
 import json
 import sys # Import necessário para manipulação de sistema
-import requests 
+import requests # Requests para fazer chamadas HTTP
 from datetime import datetime
 
 # Configuração da simulação
@@ -24,18 +24,16 @@ def gerar_dados_sensor(id_maquina):
     # Se for outra coisa, usa valores padrão.
     
     if "FORNO" in id_maquina.upper():
-        # Fornos trabalham mais quentes (150 a 200 graus)
-        temperatura = round(random.uniform(150.0, 200.0), 2)
+        temperatura = round(random.uniform(150.0, 200.0), 2) # Fornos trabalham mais quentes (150 a 200 graus)
         rpm = 0 # Forno não roda
         vibracao = round(random.uniform(0.0, 0.5), 2)
-    else:
-        # Máquinas rotativas padrão (Prensas, Tornos, Fresas)
+    else: # Máquinas rotativas padrão (Prensas, Tornos, Fresas)
         temperatura = round(random.uniform(70.0, 100.0), 2)
         rpm = random.randint(1200, 1800)
         vibracao = round(random.uniform(0.1, 2.0), 2)
 
     # Cria o pacote de dados
-    dados = {
+    return {
         "id_maquina": id_maquina,
         "timestamp": datetime.now().isoformat(),
         "temperatura": temperatura,
@@ -43,20 +41,25 @@ def gerar_dados_sensor(id_maquina):
         "vibracao": vibracao
     }
 
-    return dados
-
 def main():
     print(f"--- Iniciando sensor da {ID_MAQUINA} ---")
+    print(f"Enviando dados para {URL_BACKEND}")
     print("Pressione Ctrl+C para encerrar.\n")
 
-    try:
-        while True:
-            pacote_dados = gerar_dados_sensor(ID_MAQUINA)
-            print(f"Enviando dados: {json.dumps(pacote_dados)}")
-            time.sleep(INTERVALO_LEITURA)
+    while True:
+        try:
+            dados = gerar_dados_sensor(ID_MAQUINA)
 
-    except KeyboardInterrupt:
-            print(f"\nSensor {ID_MAQUINA} encerrado pelo usuário.")
+            # Post para o java!
+            resposta = requests.post(URL_BACKEND, json= dados)
 
+            print(f"Enviando: {dados['temperatura']}°C | Status da API: {resposta.status_code}")
+
+        except requests.exceptions.ConnectionError:
+            print("Erro: Não foi possível conectar ao Backend. Tentando novamente...")
+        except Exception as e:
+            print(f"Erro inesperado: {e}")
+        
+        time.sleep(INTERVALO_LEITURA) 
 if __name__ == "__main__":
     main()
