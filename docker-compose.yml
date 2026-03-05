@@ -21,7 +21,12 @@ services:
     depends_on:
     - db # Regra vital: O Java só pode iniciar DEPOIS que o banco de dados estiver pronto
   sensor-prensa:
-  
-
+    build: . # O ponto (.) diz ao Docker para procurar o Dockerfile nesta mesma pasta (raiz)
+    container_name: sensor_prensa_01
+    depends_on:
+      - backend # Regra vital: O Python só começa a enviar dados DEPOIS que a API Java estiver no ar
+    # Passamos o nome da máquina para o nosso script sensor.py
+    command: ["python", "-u", "sensor.py", "PRENSA-HIDRAULICA-01"]
+    
 volumes:
   postgres_data:
