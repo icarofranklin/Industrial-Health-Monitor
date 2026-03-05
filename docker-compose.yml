@@ -12,6 +12,16 @@ services:
       - "5432:5432"
     volumes: # Salva os dados no disco rígido para não perder o container
       - postgres_data:/var/lib/postgresql/postgres_data
+  backend:
+    build: ./demo # Diz ao Docker para procurar o Dockerfile dentro da pasta demo
+    container_name: backend_industrial
+    restart: always
+    ports:
+      - "8080:8080" # Permite-nos aceder à API pelo nosso navegador depois
+    depends_on:
+    - db # Regra vital: O Java só pode iniciar DEPOIS que o banco de dados estiver pronto
+  sensor-prensa:
+  
 
 volumes:
   postgres_data:
