@@ -1,8 +1,8 @@
 import random
 import time
 import json
-import sys # Import necessário para manipulação de sistema
-import requests # Requests para fazer chamadas HTTP
+import sys 
+import requests
 from datetime import datetime
 
 # Configuração da simulação
